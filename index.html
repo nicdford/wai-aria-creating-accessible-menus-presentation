@@ -1,0 +1,294 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>Accessible Menus w/ WAI-ARIA</title>
+
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/league.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/monokai.css">
+	<style>
+		.smaller {
+			font-size: 14px;
+			line-height: 1.5;
+		}
+
+		a {
+			font-size: 60%;
+			text-transform: uppercase;
+			font-style: italic;
+		}
+	</style>
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section data-markdown>
+				<textarea data-template>
+					# Accessible Menus
+
+					_Creating menus that follow WAI-ARIA best practices_
+
+					[Nic Ford](http://nicdford.com/)
+				</textarea>
+			</section>
+			<section data-markdown>
+				## What is WAI-ARIA
+
+				WAI-ARIA is a specification that outlines how user interface controls should be implemented to provide an accessible experience for users with disabilities.
+
+				WAI-ARIA 1.2 meets WCAG 2.1 guidelines.
+			</section>
+			<section>
+				<section data-markdown>
+					<textarea data-template>
+						## Looking big picture
+
+						- Understand your project accessibility goals
+						- Understand your project development life cycle
+						- Then make an informed decision about _how_ to go about building
+					</textarea>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						## Accessibility goals
+
+						- Provide accessible interfaces for as many users as possible
+						- Focus on implementing high-adoption rate standards
+						- Test as much as possible with NVDA (windows) and/or Voiceover (Mac)
+					</textarea>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						## Project life cycle
+
+						_An iterative project life cycle allows us to:_
+
+						- Easily update in the future
+						- Modify how we go about complying with changing WAI-ARIA standards
+						- Do all of this in a timely and with fairly rapid turn around
+					</textarea>
+				</section>
+			</section>
+			<section data-markdown>
+				## Balancing goals
+
+				_The WSU Design System needs to:_
+
+				- Maintain a fairly rapid development life cycle
+				- Be able to support on-going change as knowledge and best practices evolve
+				- Be fairly bleeding edge, without sacrificing high-adoption rates and compatibility
+			</section>
+			<section>
+				<section data-markdown data-background-image="https://i.imgflip.com/3h05xx.jpg" data-background-size="contain">
+
+				</section>
+
+				<section data-background-image="https://i.imgflip.com/3h05xx.jpg" data-background-size="contain" data-background-opacity="0.1">
+					<h2>Evaluating the Options</h2>
+					<p class="fragment">Working Draft vs Editors Draft</p>
+					<p class="fragment"><strong><u>Working Draft</u></strong></p>
+					<p class="fragment">1.1 Spec vs 1.2 Spec</p>
+				</section>
+
+				<section data-background-image="https://i.imgflip.com/3h05xx.jpg" data-background-size="contain" data-background-opacity="0.1">
+					<h2>Reviewing Changelog</h2>
+					<blockquote>
+						06-Dec-2017: Make <code>aria-expanded</code> a supported state of menuitem. This change also makes it a supported property of <code>menuitemcheckbox</code> and <code></code>menuitemradio</code> via inheritance.
+					</blockquote>
+					<a href="https://www.w3.org/TR/wai-aria-1.2/#changelog">WAI-ARIA 1.2 Changelog</a>
+				</section>
+
+				<section data-background-image="https://i.imgflip.com/3h05xx.jpg" data-background-size="contain" data-background-opacity="0.1">
+					<h2>Decisions...</h2>
+					<p>Working Draft vs Editors Draft</p>
+					<p><strong><u>Working Draft</u></strong></p>
+					<p>1.1 Spec vs 1.2 Spec</p>
+					<p class="fragment"><strong><u>1.2 Spec</u></strong></p>
+
+				</section>
+			</section>
+			<section>
+				<pre><code data-trim data-line-numbers class="smaller">
+					<nav aria-label="Horizontal Site Navigation">
+					  <ul role="menubar" aria-label="Horizontal Site Navigation">
+					    <li role="none">
+					      <a href="#" role="menuitem">Home</a>
+					    </li>
+					    <li role="none">
+					      <a href="#" role="menuitem">About</a>
+					    </li>
+					    <li role="none">
+					      <a href="#" role="menuitem" aria-haspopup="true" aria-expanded="true">Programs</a>
+					      <ul role="menu" aria-label="Programs">
+					        <li><a href="#">Math</a></li>
+					        <li><a href="#">Science</a></li>
+					        <li><a href="#">Writing</a></li>
+					      </ul>
+					    </li>
+					  </ul>
+					</nav>
+				</code></pre>
+
+				<a href="https://www.w3.org/TR/wai-aria-practices-1.2/#menu">Based on WAI-ARIA Menu Best Practices</a>
+
+			</section>
+			<section>
+				<section data-markdown>
+					## Important Bits
+					- `aria-label`
+					- `role`
+					- `aria-haspopup`
+					- `aria-expanded`
+					- Keyboard Navigation
+				</section>
+				<section data-markdown>
+					## aria-label
+					`aria-label` defines a label, as a string, for an element.
+
+					[wai-aria 1.2 - label](https://www.w3.org/TR/wai-aria-1.2/#aria-label)
+				</section>
+				<section data-markdown>
+					## role
+					`role` defines a clear expectation of what an element should do.
+
+					[wai-aria 1.2 - roles](https://www.w3.org/TR/wai-aria-1.2/#introroles)
+				</section>
+				<section data-markdown>
+					## aria-haspopup
+					`aria-haspopup` indicates whether an element has interactivity and can be triggered by an element
+
+					[wai-aria 1.2 - haspopup](https://www.w3.org/TR/wai-aria-1.2/#aria-haspopup)
+				</section>
+				<section data-markdown>
+					## aria-expanded
+					`aria-expanded` indicates whether it's expanded or collapsed
+
+					[wai-aria 1.2 - expanded](https://www.w3.org/TR/wai-aria-1.2/#aria-expanded)
+				</section>
+				<section data-markdown>
+					## Keyboard Navigation
+					"the tab sequence should include only one focusable element of a composite UI component."
+
+					Don't rely on only tabs for controls; use the keyboard.
+
+					[wai-aria 1.2 - Managing Focus](https://www.w3.org/TR/wai-aria-1.2/#managingfocus)
+
+					[wai-aria practices 1.2 - Keyboard Nav Inside Components](https://www.w3.org/TR/wai-aria-practices-1.2/#kbd_general_within)
+
+					[wai-aria practices 1.2 - Keyboard Nav Conventions](https://www.w3.org/TR/wai-aria-practices-1.2/#kbd_generalnav)
+				</section>
+			</section>
+			<section>
+				<section data-markdown>
+					## The Good News... It's not that hard!
+				</section>
+				<section data-markdown>
+					## Requires Action
+
+					- `aria-expanded`
+					- Keyboard Navigation
+				</section>
+				<section>
+					<h2>Aria-expanded CSS/JS</h2>
+
+					<pre><code data-trim data-line-numbers class="smaller">
+						[aria-expanded="true"] ~ ul {
+						  display: block;
+						}
+
+						[aria-expanded="false"] ~ ul {
+						  display: none;
+						}
+					</code></pre>
+
+					<pre><code data-trim data-line-numbers class="smaller">
+							// Sets all to Closed if JS is enabled
+							var collapsibleItems = document.querySelectorAll('[aria-expanded="true"]');
+							collapsibleItems.forEach(element => {
+								element.setAttribute('aria-expanded', 'false');
+							});
+
+							// Toggle Items on Click
+							collapsibleItems.forEach(element => {
+								element.addEventListener('click', function (e) {
+									e.preventDefault
+
+									if (this.getAttribute('aria-expanded') == 'true') {
+										this.setAttribute('aria-expanded', 'false');
+									} else {
+										this.setAttribute('aria-expanded', 'true');
+									}
+								})
+							})
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Demo</h2>
+					<p class="codepen" data-height="326" data-theme-id="dark" data-default-tab="html,result" data-user="nicdford" data-slug-hash="BaabRzz" style="height: 326px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="WAI-ARIA 1.2 Best Practices Menu">
+						<span>See the Pen <a href="https://codepen.io/nicdford/pen/BaabRzz">
+								WAI-ARIA 1.2 Best Practices Menu</a> by Nic Ford (<a href="https://codepen.io/nicdford">@nicdford</a>)
+							on <a href="https://codepen.io">CodePen</a>.</span>
+					</p>
+					<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+				</section>
+
+				<section>
+					<h2>Keyboard Navigation</h2>
+					<pre><code data-trim data-line-numbers class="smaller">
+						import { Menubar } from '~@wsu-build-tools/js/wai-aria/MenubarLinks';
+
+						// Initiate keyboard controls for accessibility support
+						var menubar = new Menubar(document.querySelector('.horz-nav'));
+						menubar.init();
+					</code></pre>
+					<a href="https://github.com/washingtonstateuniversity/wsu-build-tools">Check out WSU Build Tools</a>
+				</section>
+			</section>
+
+			<section>
+				<h1>Questions?</h1>
+			</section>
+
+		</div>
+	</div>
+
+	<script src="js/reveal.js"></script>
+
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			configure: [
+				{ tabReplace: '  ' }
+			],
+			dependencies: [
+				{ src: 'plugin/markdown/marked.js' },
+				{ src: 'plugin/markdown/markdown.js' },
+				{ src: 'plugin/notes/notes.js', async: true },
+				{ src: 'plugin/highlight/highlight.js', async: true }
+			]
+		});
+	</script>
+</body>
+
+</html>
